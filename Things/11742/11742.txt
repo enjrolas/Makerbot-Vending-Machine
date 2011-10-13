@@ -1,0 +1,13 @@
+<thing><id>11742</id><title>Filament Colorizer - Marker Holder</title><author>cyclone</author><description>
+"Inspired from" Thing 5570. thingiverse.com/thing:5570
+
+I threw this together a while ago and have used it a good bit. I kinda forgot about it because I now use mostly PLA and the marker thing doesn't work well on PLA. It works very well on ABS though.
+
+This holds two standard Sharpie markers (i.e. "fine" not "ultra fine") and should clear a standard Cupcake's roof hole. I've no idea about the ToM but I expect it should work as well. I originally made a similar thing for one marker but it didn't color the filament very much resulting in very light coloring. Two markers actually tints the filament enough to be noticable. Three would be better, and it follows that 4 would be better-er. I suppose I could throw a three pronged one together. Might be a good exercise to make parametric in openSCAD. I think a holder that bristles with Sharpies might colorate stuff pretty good.
+
+The image with the two parts shown is close to how it really looks. One is natural ABS the other is natural ABS colored with two black Sharpies. The final color is what I'd call a dark gray. The color is throughout the part and fairly even. Long prints you do notice the color getting lighter as the markers run out. After a six hour print the two sharpies were getting low. Most colors come out light to dark pastel colored. 
+
+I've done many turtles this way. thingiverse.com/thing:4178 The turtles shown are single blue marker, single green marker and the weird looking one is natural (clear) PLA with a single red marker, then a single blue marker. The red just made the PLA look over-cooked orange, the blue wasn't too bad but not as nice as the ABS.
+
+Note: There is some solvent in the markers that allows the ink to soak into the ABS. If you rub a Sharpie on ABS then break the filament you will see what I mean. That said, if you leave the markers in this rig in contact with the stationary filament it will (fairly quickly actually) cause this filament to shear off cleanly at that point. I've not noticed any weakness of the printed colored parts compared to natural parts. I expect the solvent is boiled off in the hot end.
+</description></thing>

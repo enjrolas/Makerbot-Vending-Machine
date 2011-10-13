@@ -1,0 +1,19 @@
+import urllib
+import re
+from BeautifulSoup import BeautifulSoup, SoupStrainer, NavigableString
+
+def grabThing(thingId):
+    opener=urllib.FancyURLopener({})
+    url="http://www.thingiverse.com/thing:"+str(thingId)
+    f=opener.open(url)
+    page=f.read()
+
+    print page
+    soup=BeautifulSoup(page)
+#    parts=soup.findAll(href="download:")
+    parts=soup.findAll(text="Description")
+#    parts=soup.findAll(attrs={'href' : re.compile("/download:$")})
+#    parts=soup.findAll(align="center")
+    print parts
+
+grabThing(11742)

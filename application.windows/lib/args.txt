@@ -1,0 +1,3 @@
+ -Xms64m -Xmx1000m
+Makerbot_Vending_Machine
+Makerbot_Vending_Machine.jar,core.jar,controlP5.jar,cocoa.jar

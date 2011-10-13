@@ -1,0 +1,4 @@
+#!/bin/sh
+
+APPDIR=$(dirname "$0")
+java  -Djava.library.path="$APPDIR" -cp "$APPDIR/lib/Makerbot_Vending_Machine.jar:$APPDIR/lib/core.jar:$APPDIR/lib/controlP5.jar:$APPDIR/lib/cocoa.jar" Makerbot_Vending_Machine
