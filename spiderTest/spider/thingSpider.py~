@@ -1,0 +1,91 @@
+import urllib
+import re
+from BeautifulSoup import BeautifulSoup, SoupStrainer, NavigableString
+import os, errno
+
+
+
+def ensure_dir(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+
+def grabThing(thingId):
+    opener=urllib.FancyURLopener({})
+    url="http://www.thingiverse.com/thing:"+str(thingId)
+#    f=opener.open(url)
+#    page=f.read()
+    f=open("49.html",'r')
+    page=f.read()
+    print page
+    soup=BeautifulSoup(page)
+
+
+    
+#title and author
+    titleTag=soup.find('title')
+    if titleTag!=None:
+        title=titleTag.contents[0].string.split(" ")[0]
+        title=title.encode('ascii','ignore').strip()
+        if title != "Error":
+            directoryPath="../Things/"+str(thingId)
+            ensure_dir(directoryPath)
+            outputFile=open(directoryPath+"/"+str(thingId)+".xml",'w')
+            author=""
+            parts=soup.findAll('h1')
+            if len(parts)>1:
+                titleString=titleTag.contents[0].string
+                titleParts=titleString.split(" ")
+                title=""
+                for titlePart in titleParts:
+                    if titlePart=="by":
+                        break
+                    else:
+                        title+=titlePart+" "
+
+                print title
+                title=title.strip()
+                link=parts[1].a;
+                if link!=None:
+                    author=link.contents[0].string
+                    
+                    outputFile.write("<thing>")
+                    outputFile.write("<id>"+str(thingId)+"</id>")
+                    print "<title>"+title+"</title>"
+                    outputFile.write("<title>"+title+"</title>")
+                    print "<author>"+author+"</author>"
+                    outputFile.write("<author>"+author+"</author>")
+            
+#description
+                    parts=soup.findAll('h2')
+                    if len(parts)>1:
+                        descriptionTags=parts[1].nextSibling.nextSibling.contents
+                        description=""
+                        for tag in descriptionTags:
+                            text=tag.string
+                            if text!=None:
+                                text=text.replace('\t','')
+                                description+=text
+                        descriptionTag="<description>"+description+"</description>"
+                        descriptionTag=descriptionTag.encode('ascii','ignore')
+                        print descriptionTag
+                        outputFile.write(descriptionTag)
+                        
+            outputFile.write("</thing>")
+
+#stl file
+            parts=soup.findAll('h3', 'file_info')            
+            print parts
+            for part in parts:
+                filename=part.contents[0].strip()
+                if filename.find("stl")!=-1:
+                    print filename
+                    row=part.parent
+                    print row
+
+'''
+for i in range(7,100):
+    print "Trying..."+str(i)
+    grabThing(i)
+'''
+
+grabThing(49)

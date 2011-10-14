@@ -1,0 +1,4 @@
+thingSpider.py is a thingiverse crawler.  It iterates across all the things in thingiverse, checking to see if 
+the thing is 3D print-able.  If it is, it creates a folder with the thing's id number, downloads all images from the image
+gallery and all stl files from the thing's parts.  It also generates an stl file with the thing's name, the author,
+and the thing's description

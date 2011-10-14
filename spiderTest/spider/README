@@ -1,0 +1,27 @@
+thingSpider.py is a thingiverse crawler.  It iterates across all the things in thingiverse, checking to see if 
+the thing is 3D print-able.  If it is, it creates a folder with the thing's id number, downloads all images from the image
+gallery and all stl files from the thing's parts.  It also generates an stl file with the thing's name, the author,
+and the thing's description
+
+All the functionality in the program is in the function grabThing(thingId).  Thing Id's are based around the thingiverse
+URLs--a thing with id '49' will have the URL http://www.thingiverse.com/thing:49
+I don't currently have a great way to get a list of all public things, so I'm doing a very simple, but computationally expensive
+hack:  I just iterate through all possible thingIds from 1 to 100,000 and test out the URL.  Sorry, makerbot!  
+
+We test to see if a thingId has a public thing by checking the title--if there's no thing associated with that thing ID, the first
+word in the title will be 'Error'
+Thingiverse html isn't really tagged with ids and names and the like, so identifying the author and description fields is just a 
+kludge of looking for html fragments unique to that field.  It's super-fragile, I know, but it works great as of October 14, 2011.
+
+If a thing exists, the spider checks to see if there are stl files associated with the thing.  If there are, it creates a folder in 
+the ../Things directory, names it after the thingId, and downloads all stl files, all images from the image gallery, and creates a 
+simple xml file with information about the thing.  The xml file looks like this:
+<Thing>
+<title>thing title</title>
+<author>thing creator</author>
+<description>thing description and instructions</description>
+</Thing>
+
+It's been robust so far, and doesn't seem to break on the hundred things I've tried, so if it does, maybe there's an edge case I didn't
+anticipate, or maybe thingiverse's html structure changed.  Either way, let me know about it on github or at alex@artiswrong.com, or 
+take a crack at it yourself.
