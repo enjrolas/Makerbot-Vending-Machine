@@ -1,0 +1,34 @@
+This is a project to build a vending machine that 'vends' all the 3D-printable things on thingiverse (http://www.thingiverse.com).
+There are three main parts to this project:  
+1:  A spider that grabs things from thingiverse, generates an info file on them, downloads images and .stl files related to the 
+thing, and uses skeinforge to generate gcode for a makerbot.
+2:  A user interface that displays images and information about the things and lets users search and navigate the library of things
+3:  A hardware interface to the vending machine and the makerbot.  It talks to the makerbot via the control program replicatorG (http://replicat.org/), controlled with applescripts, and it talks to the vending machine hardware over a serial port.
+
+The vending machine concept goes like this:
+There's a UI on the vending machine that lets a user browse the parts that the machine vends.  When a user selects a part and hits
+"build," the UI asks the user for their name.  Even small, simple parts take 20 minutes to build, so the machine will store the part 
+for the user under their name, and allow the user to come back, identify herself, and retreive her part.  Once the user enters her name, 
+the program tells the makerbot to start printing.  The vending machine itself has a motorized carousel with six bins, each of which can 
+store a printed part.  When the makerbot finishes, the program commands the carousel to rotate to an empty bin, and the makerbot's 
+automatic build platform pushes the part from the makerbot into the bin, leaving the makerbot ready to build the next part.  
+
+If a user returns to pick up her part, the program will ask for her name, look up which carousel bin corresponds to that name, rotate 
+the carousel so that that bin is in front of an access door, and then unlock the access door to allow the user to retrieve the part.
+
+
+This is basic demonstration of a concept, and there's plenty of work that can be done to make the code and machine more robust and
+functional.  3D printers aren't fast or robust enough, currently, to make a public-use vending machine viable, but they'll be there in 
+about two years.  Makerbots are extraordinary, in that they're not
+only cheap and fairly capable, but they are also the only 3D printer
+to date that's capable of automated production, via their automated
+build platform.  
+The goal of this project is to show how custom production devices can
+fit into our lives, and how we can seamlessly use them as we go about
+our day.  While the vending machine concept is very ambitious, and
+needs development on several fronts before it could truly be something
+we use regularly, there are several components of this project that
+offer an immediate jump in low-cost production capabilities:
+
+The first is a build queue.  Makerbots have this incredible production
+capability, but their user interface (at least the 

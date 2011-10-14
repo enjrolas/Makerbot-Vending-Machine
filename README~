@@ -1,0 +1,7 @@
+This is a project to build a vending machine that 'vends' all the 3D-printable things on thingiverse (http://www.thingiverse.com).
+There are three main parts to this project:  
+1:  A spider that grabs things from thingiverse, generates an info file on them, downloads images and .stl files related to the 
+thing, and uses skeinforge to generate gcode for a makerbot.
+2:  A user interface that displays images and information about the things and lets users search and navigate the library of things
+3:  A hardware interface to the vending machine and the makerbot.  It talks to the makerbot via the control program replicatorG (http://replicat.org/), controlled with applescripts, and it talks to the vending machine hardware over a serial port.
+

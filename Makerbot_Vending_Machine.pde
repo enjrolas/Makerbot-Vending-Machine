@@ -1,6 +1,7 @@
+import processing.serial.*;
 import controlP5.*;
-import com.apple.cocoa.application.NSApplication;
-import com.apple.cocoa.foundation.*;
+
+Serial myPort;  // The serial port
 
 int offset=80;
 int thingSpacing=10;
@@ -42,6 +43,7 @@ void setup()
 {
   rootDirectory=sketchPath;
   vendingMachine=new vendingMachine();
+  myPort = new Serial(this, Serial.list()[0], 115200);
   println(rootDirectory);
   mode=DISPLAY_THINGS;
   size(1200, 800);
