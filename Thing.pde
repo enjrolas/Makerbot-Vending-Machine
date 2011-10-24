@@ -41,12 +41,17 @@ class Thing{
       if(type.equals("gcode"))
         gcodePath=thingDirectory+filename;
     }
-    if(imagePath!=null)
-      thingImage=loadImage(imagePath);      
+/*   uses up wayyyy too much memory to have all the images loaded */
+//    if(imagePath!=null)
+//      thingImage=loadImage(imagePath);      
   }
   
   void display(int x, int y, int displayWidth)
   {
+    if(thingImage==null)
+    {
+      thingImage=loadImage(imagePath);
+    }
     if(name!=null)
     {
       ArrayList nameStrings=wordWrap(name, displayWidth);
@@ -61,6 +66,12 @@ class Thing{
     if(thingImage!=null)
       image(thingImage,x,y,displayWidth,thingImage.height*displayWidth/thingImage.width);    
   }
+  //free up some memory
+  void free()
+  {
+    thingImage=null;
+  }
+  
   void displayDescription(int x, int y, int displayWidth)
   {
     textFont(font,14);

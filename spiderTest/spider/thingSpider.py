@@ -51,6 +51,7 @@ def grabThing(thingId):
         if title != "Error":  #the thing exists
             directoryPath="../Things/"+str(thingId)
             author=""
+            print title
             parts=soup.findAll('h1')
             if len(parts)>1:
                 titleString=titleTag.contents[0].string
@@ -69,10 +70,12 @@ def grabThing(thingId):
 
 #stl files
                     parts=soup.findAll('h3', 'file_info')            
+                    print parts
                     for part in parts:
                         filename=part.contents[0].strip()
-                        if filename.find("stl")!=-1:
+                        if filename.find(".stl")!=-1:
                             ensure_dir(directoryPath)
+                            print directoryPath+"/"+filename
                             hasStlFiles=True
                             downloadURL=part.parent.parent.a['href']
                             downloadURL="http://www.thingiverse.com"+downloadURL
@@ -91,6 +94,7 @@ def grabThing(thingId):
                             text=tag.string
                             if text!=None:
                                 text=text.replace('\t','')
+                                text=text.strip()
                                 description+=text
                         descriptionTag="<description>"+description+"</description>"
                         descriptionTag=descriptionTag.encode('ascii','ignore')
@@ -126,9 +130,9 @@ def grabThing(thingId):
     
 
 
-for i in range(50,100):
+for i in range(366,1000):
     print "Trying..."+str(i)
     grabThing(i)
 
 
-#grabThing(11816)
+#grabThing(157)

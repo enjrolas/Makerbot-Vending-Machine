@@ -15,6 +15,8 @@ void setup()
     for (int i=1;i<7;i++)  
       controlP5.addButton("bin"+i, 0, 150, 5+i*20, 100, 20);
   controlP5.addButton("STOP!", 0, 400, 100, 100, 100);
+  controlP5.addButton("Unlock Door",0,300,200,100,30);
+  controlP5.addButton("Lock Door",0,300,250,100,30);
   size(600,600);
 }
 
@@ -37,4 +39,8 @@ public void controlEvent(ControlEvent theEvent) {
     }
     if (theEvent.controller().name().equals("STOP!"))
       vendingMachine.stop();    
+    if (theEvent.controller().name().equals("Unlock Door"))
+      vendingMachine.unlockDoor();    
+    if (theEvent.controller().name().equals("Lock Door"))
+      vendingMachine.lockDoor();    
 }

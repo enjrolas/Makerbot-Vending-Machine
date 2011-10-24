@@ -1,3 +1,5 @@
+#include <Servo.h>
+
 
 #define sense1 8 //reflectance sensor pin mappings--used for reading carousel position
 #define sense2 9 
@@ -17,7 +19,8 @@
 
 #define DIRECTION 2
 #define SPEED 3
-
+#define DOOR_SERVO 6
+#define DOOR_LOCK 7
 #define CW 0
 #define CCW 1
 
@@ -26,6 +29,9 @@
 #define CENTERING_BIN 2
 #define DOOR_OPEN 3
 #define STOPPED 4
+
+Servo doorServo;  // create servo object to control a servo 
+
 
 unsigned char dir;
 unsigned char mode;
@@ -39,6 +45,9 @@ void setup(){
   pinMode(DIRECTION,OUTPUT);
   pinMode(SPEED,OUTPUT);
   digitalWrite(SPEED, LOW);
+  pinMode(DOOR_LOCK, INPUT);
+  doorServo.attach(DOOR_SERVO);
+  lockDoor();
   Serial.begin(115200);
 }
 
@@ -65,7 +74,9 @@ void loop(){
    if(command==LOCK)
     lockDoor();
    if(command==POSITION_REQUEST)
-     Serial.write(positionValue); 
+     Serial.print(positionValue); 
+   if(command=DOOR_STATE_REQUEST)
+     Serial.print(readLock()?'1':'0');
    if(command==STOP)
    {
      mode=STOPPED;
@@ -112,10 +123,17 @@ void loop(){
 
 void unlockDoor()
 {
+  doorServo.write(1);
 }
 
 void lockDoor()
 {
+  doorServo.write(90);
+}
+
+boolean readLock()
+{
+  return digitalRead(DOOR_LOCK);
 }
 
 void readPosition(){

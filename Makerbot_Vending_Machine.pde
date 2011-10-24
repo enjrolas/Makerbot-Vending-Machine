@@ -28,7 +28,7 @@ int selectedThing;
 
 int clicked=0;
 int thingListOffset=0;
-LinkedList things;
+Thing[] things;
 Button[] thingButtons;
 UIButton[] controlButtons;
 
@@ -42,28 +42,27 @@ VendingMachine vendingMachine;
 void setup()
 {
   rootDirectory=sketchPath;
-  vendingMachine=new vendingMachine();
   myPort = new Serial(this, Serial.list()[0], 115200);
+  vendingMachine=new VendingMachine();
   println(rootDirectory);
   mode=DISPLAY_THINGS;
   size(1200, 800);
   font=loadFont("Baskerville-12.vlw");
-//  font=loadFont("AppleGothic-12.vlw");
+  //  font=loadFont("AppleGothic-12.vlw");
   textFont(font, 12);
   loadThings();
-  numThings=things.size();
-  thingsToDisplay=(width-offset*2)/(thingWidth+thingSpacing);
-  if (thingsToDisplay<things.size())
-    thingsToDisplay=things.size();
+  numThings=things.length;
+  thingsToDisplay=5;
+//  thingsToDisplay=(width-offset*2)/(thingWidth+thingSpacing);
   imageMode(CORNER);
   thingButtons=new Button[thingsToDisplay];
   controlButtons=new UIButton[6];
-  controlButtons[LEFT]=new UIButton(buttonMargin, 300, buttonSize, buttonSize, rootDirectory+"/UI/left.jpg",DISPLAY_THINGS);
-  controlButtons[RIGHT]=new UIButton(width-buttonSize-buttonMargin, 300, buttonSize, buttonSize, rootDirectory+"/UI/right.jpg",DISPLAY_THINGS);
-  controlButtons[BACK]=new UIButton(100, 700, 100, 100, rootDirectory+"/UI/back.jpg",THING_SELECTED);
-  controlButtons[BUILD]=new UIButton(1000, 300, 150, 150, rootDirectory+"/UI/build.jpg",THING_SELECTED);
-  controlButtons[SELECTED_LEFT]=new UIButton(buttonMargin, 50, buttonSize, buttonSize, rootDirectory+"/UI/left.jpg",THING_SELECTED);
-  controlButtons[SELECTED_RIGHT]=new UIButton(width-buttonSize-buttonMargin, 50, buttonSize, buttonSize, rootDirectory+"/UI/right.jpg",THING_SELECTED);
+  controlButtons[LEFT]=new UIButton(buttonMargin, 300, buttonSize, buttonSize, rootDirectory+"/UI/left.jpg", DISPLAY_THINGS);
+  controlButtons[RIGHT]=new UIButton(width-buttonSize-buttonMargin, 300, buttonSize, buttonSize, rootDirectory+"/UI/right.jpg", DISPLAY_THINGS);
+  controlButtons[BACK]=new UIButton(100, 700, 100, 100, rootDirectory+"/UI/back.jpg", THING_SELECTED);
+  controlButtons[BUILD]=new UIButton(1000, 300, 150, 150, rootDirectory+"/UI/build.jpg", THING_SELECTED);
+  controlButtons[SELECTED_LEFT]=new UIButton(buttonMargin, 50, buttonSize, buttonSize, rootDirectory+"/UI/left.jpg", THING_SELECTED);
+  controlButtons[SELECTED_RIGHT]=new UIButton(width-buttonSize-buttonMargin, 50, buttonSize, buttonSize, rootDirectory+"/UI/right.jpg", THING_SELECTED);
 
   for (int i=0;i<thingsToDisplay;i++)
     thingButtons[i]=new Button(getXPos(i), 150, thingWidth, 400, DISPLAY_THINGS);
@@ -71,8 +70,14 @@ void setup()
 
 void loadThings()
 {
-  things=new LinkedList();
   File[] files = listFiles(sketchPath+"/Things/");
+  int numDirectories=0;
+  int thingIndex=0;
+  for(int i=0;i<files.length;i++)
+    if(files[i].isDirectory())
+      numDirectories++;
+  println(numDirectories);
+  things=new Thing[numDirectories];
   for (int i = 0; i < files.length; i++) {
     File f = files[i];    
     if (f.isDirectory())
@@ -81,8 +86,9 @@ void loadThings()
       String thingDirectory=rootDirectory+"/Things/"+id+"/";
       String xmlFile=thingDirectory+id+".xml"; 
       XMLElement xml=new XMLElement(this, xmlFile);
-      println(id);
-      things.add(new Thing(id, xml));
+      println(thingIndex+" "+id);
+      things[thingIndex]=new Thing(id, xml);
+      thingIndex++;
     }
   }
 }
@@ -90,32 +96,24 @@ void loadThings()
 void draw()
 {
   background(0);
-    for (int i=0;i<controlButtons.length;i++)  
-      controlButtons[i].display();
+  for (int i=0;i<controlButtons.length;i++)  
+    controlButtons[i].display();
 
   if (mode==DISPLAY_THINGS) {
     for (int i=0;i<thingsToDisplay;i++)
     {
       int thingOffset= (thingListOffset+i)%numThings;
-      if(thingOffset<0)
+      if (thingOffset<0)
         thingOffset+=numThings;
-      Thing thing=(Thing)things.get(thingOffset);
       int xPos=getXPos(i);
       stroke(255);
-      thing.display(xPos, 200, thingWidth);
-      noFill();
-      if (i==clicked)
-        stroke(0, 255, 0);
-      else
-        stroke(0, 0, 255);
-      thingButtons[i].display();
+      things[thingOffset].display(xPos, 200, thingWidth);
     }
   }
-  if(mode==THING_SELECTED)
+  if (mode==THING_SELECTED)
   {
-    Thing thing=(Thing)things.get(selectedThing);
-    thing.display(100,100,selectedWidth);    
-    thing.displayDescription(600,100,400);
+    things[selectedThing].display(100, 100, selectedWidth);    
+    things[selectedThing].displayDescription(600, 100, 400);
   }
 }
 
@@ -123,36 +121,44 @@ void selectThing(int i)
 {
   clicked=i;
   selectedThing=(i+thingListOffset)%numThings;
-  if(selectedThing<0)
+  if (selectedThing<0)
     selectedThing+=numThings;
-  println(selectedThing);
+  for(int j=0;j<numThings;j++)
+    if(j!=selectedThing)
+      things[j].free();   
   mode=THING_SELECTED;
 }
 
 void UIClick(int i)
 {
-  switch(i){
-  case(RIGHT):
+  switch(i) {
+    case(RIGHT):
     thingListOffset--;
     break;
-  case(LEFT):
+    case(LEFT):
     thingListOffset++;  
     break;
-  case(BACK):
+    case(BACK):
     mode=DISPLAY_THINGS;
     break;
-  case(BUILD):
+    case(BUILD):
     build();
     break;
-  case(SELECTED_RIGHT):
+    case(SELECTED_RIGHT):
     selectedThing++;
-    if(selectedThing>=numThings)
+    if (selectedThing>=numThings)
       selectedThing-=numThings;
+    for(int j=0;j<numThings;j++)
+      if(j!=selectedThing)  
+        things[j].free();
     break;
-  case(SELECTED_LEFT):
+    case(SELECTED_LEFT):
     selectedThing--;
-    if(selectedThing<0)
+    if (selectedThing<0)
       selectedThing=numThings-1;
+    for(int j=0;j<numThings;j++)
+      if(j!=selectedThing)  
+        things[j].free();
     break;
   }
 }

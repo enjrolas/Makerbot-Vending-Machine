@@ -1,0 +1,9 @@
+Format is tab separated skeinforge settings.
+_Name                          	Value
+WindowPosition	400+22
+Open File for Skeinforge	Coat-hook.stl
+analyze	False
+craft	False
+help	False
+meta	False
+profile	True
